@@ -1,0 +1,6 @@
+[providers]
+[providers.sourcehut]
+ssh = "git@git.sr.ht:~hyro/discord-api-docs-tracker"
+[providers.github]
+ssh = "git@github.com:xhyrom-utils/discord-api-docs-tracker.git"
+primary = true
