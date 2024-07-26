@@ -25,13 +25,13 @@ def hex_to_int(hex)
   hex[1..].to_i(16)
 end
 
+data = data.sort { |a, b| a[:number] <=> b[:number] }
+
 data.each do |item|
   created_at = Time.parse(item[:created_at]).to_i
   merged_at = item[:merged_at] ? Time.parse(item[:merged_at]).to_i : nil
 
-  if created_at < old_check && (merged_at.nil? || (!merged_at.nil? && merged_at < old_check))
-    next
-  end
+  next if created_at < old_check && (merged_at.nil? || (!merged_at.nil? && merged_at < old_check))
 
   embed = {
     author: {
@@ -44,15 +44,6 @@ data.each do |item|
 
   embed[:description] = item[:body] unless item[:body].nil?
 
-  if !merged_at.nil? && merged_at > old_check
-    puts "Merged #{item[:title]} at #{merged_at}"
-
-    embed[:color] = hex_to_int('#983ac7')
-    embed[:title] = "Pull request merged: ##{item[:number]} #{item[:title]}"
-
-    send_embed(embed)
-  end
-
   if created_at > old_check
     puts "Created #{item[:title]} at #{created_at}"
 
@@ -61,6 +52,15 @@ data.each do |item|
 
     send_embed(embed)
   end
+
+  if !merged_at.nil? && merged_at > old_check
+    puts "Merged #{item[:title]} at #{merged_at}"
+
+    embed[:color] = hex_to_int('#983ac7')
+    embed[:title] = "Pull request merged: ##{item[:number]} #{item[:title]}"
+
+    send_embed(embed)
+  end
 end
 
-File.write(".check", current_check.to_i)
+File.write('.check', current_check.to_i)
