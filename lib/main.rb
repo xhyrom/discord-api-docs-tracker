@@ -15,9 +15,7 @@ def send_embed(embed)
     body: {
       embeds: [embed]
     }.to_json,
-    headers: {
-      'Content-Type' => 'application/json'
-    }
+    headers: { 'Content-Type' => 'application/json' }
   )
 end
 
@@ -53,14 +51,14 @@ data.each do |item|
     send_embed(embed)
   end
 
-  if !merged_at.nil? && merged_at > old_check
-    puts "Merged #{item[:title]} at #{merged_at}"
+  next unless !merged_at.nil? && merged_at > old_check
 
-    embed[:color] = hex_to_int('#983ac7')
-    embed[:title] = "Pull request merged: ##{item[:number]} #{item[:title]}"
+  puts "Merged #{item[:title]} at #{merged_at}"
 
-    send_embed(embed)
-  end
+  embed[:color] = hex_to_int('#983ac7')
+  embed[:title] = "Pull request merged: ##{item[:number]} #{item[:title]}"
+
+  send_embed(embed)
 end
 
 File.write('.check', current_check.to_i)
