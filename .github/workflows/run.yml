@@ -18,6 +18,8 @@ jobs:
           ruby-version: "3.3" # Not needed with a `.ruby-version` or `.tool-versions`
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec rake run
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       - name: commit and push
         run: |
           git config user.name github-actions[bot]
