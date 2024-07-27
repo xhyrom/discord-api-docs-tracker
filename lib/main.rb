@@ -14,8 +14,10 @@ response = HTTParty.get('https://api.github.com/repos/discord/discord-api-docs/p
 data = JSON.parse response, symbolize_names: true
 
 def send_embed(embed)
-  HTTParty.post(ENV['WEBHOOK_URL'],
+  HTTParty.post(
+    ENV['WEBHOOK_URL'],
     body: {
+      username: 'discord-api-docs',
       embeds: [embed]
     }.to_json,
     headers: { 'Content-Type' => 'application/json' }
@@ -64,7 +66,8 @@ data.each do |item|
   send_embed(embed)
 end
 
-HTTParty.patch("https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1",
+HTTParty.patch(
+  'https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1',
   body: {
     body: current_check.to_i.to_s
   }.to_json,
