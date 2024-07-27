@@ -21,9 +21,3 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: julien-deramond/update-issue-body@v1
-        with:
-          issue-number: 1
-          body: |
-            **Edit**: Some new content
-          edit-mode: replace

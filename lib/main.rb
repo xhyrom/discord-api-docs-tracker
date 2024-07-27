@@ -66,7 +66,7 @@ end
 
 HTTParty.patch("https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1",
   body: {
-    body: current_check.to_i
+    body: current_check.to_i.to_s
   }.to_json,
   headers: {
     'Content-Type' => 'application/json',
