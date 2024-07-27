@@ -4,8 +4,11 @@ require 'httparty'
 require 'json'
 require 'time'
 
-old_check = File.read('.check').chomp.to_i
 current_check = Time.now
+
+issue = HTTParty.get('https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1', format: :plain)
+issue = JSON.parse issue, symbolize_names: true
+old_check = issue[:body].to_i
 
 response = HTTParty.get('https://api.github.com/repos/discord/discord-api-docs/pulls?state=all', format: :plain)
 data = JSON.parse response, symbolize_names: true
@@ -61,4 +64,12 @@ data.each do |item|
   send_embed(embed)
 end
 
-File.write('.check', current_check.to_i)
+HTTParty.patch("https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1",
+  body: {
+    body: current_check.to_i
+  }.to_json,
+  headers: {
+    'Content-Type' => 'application/json',
+    'Authorization' => "Bearer #{ENV['GITHUB_TOKEN']}"
+  }
+)
