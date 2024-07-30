@@ -17,7 +17,7 @@ def send_embed(embed)
   HTTParty.post(
     ENV['WEBHOOK_URL'],
     body: {
-      username: 'discord-api-docs',
+      username: 'api-docs',
       embeds: [embed]
     }.to_json,
     headers: { 'Content-Type' => 'application/json' }
