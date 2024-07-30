@@ -6,7 +6,9 @@ require 'time'
 
 current_check = Time.now
 
-issue = HTTParty.get('https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1', format: :plain)
+ISSUE_URL = 'https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1'
+
+issue = HTTParty.get(ISSUE_URL, format: :plain)
 issue = JSON.parse issue, symbolize_names: true
 old_check = issue[:body].to_i
 
@@ -67,7 +69,7 @@ data.each do |item|
 end
 
 HTTParty.patch(
-  'https://api.github.com/repos/xhyrom/discord-api-docs-tracker/issues/1',
+  ISSUE_URL,
   body: {
     body: current_check.to_i.to_s
   }.to_json,
