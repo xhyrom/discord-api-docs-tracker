@@ -16,14 +16,16 @@ response = HTTParty.get('https://api.github.com/repos/discord/discord-api-docs/p
 data = JSON.parse response, symbolize_names: true
 
 def send_embed(embed)
-  HTTParty.post(
-    ENV['WEBHOOK_URL'],
-    body: {
-      username: 'api-docs',
-      embeds: [embed]
-    }.to_json,
-    headers: { 'Content-Type' => 'application/json' }
-  )
+  ENV['WEBHOOK_URLS'].split(',').each do |url|
+    HTTParty.post(
+      "https://discord.com/api/webhooks/#{url}",
+      body: {
+        username: 'api-docs',
+        embeds: [embed]
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    )
+  end
 end
 
 def hex_to_int(hex)
