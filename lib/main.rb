@@ -37,8 +37,11 @@ data = data.sort { |a, b| a[:number] <=> b[:number] }
 data.each do |item|
   created_at = Time.parse(item[:created_at]).to_i
   merged_at = item[:merged_at] ? Time.parse(item[:merged_at]).to_i : nil
+  closed_at = item[:closed_at] ? Time.parse(item[:closed_at]).to_i : nil
 
-  next if created_at < old_check && (merged_at.nil? || (!merged_at.nil? && merged_at < old_check))
+  next if created_at < old_check && (
+    (merged_at.nil? || (!merged_at.nil? && merged_at < old_check)) || (!closed_at.nil? && closed_at < old_check)
+  )
 
   embed = {
     author: {
@@ -56,6 +59,15 @@ data.each do |item|
 
     embed[:color] = hex_to_int('#4adb40')
     embed[:title] = "Pull request opened: ##{item[:number]} #{item[:title]}"
+
+    send_embed(embed)
+  end
+
+  if merged_at.nil? && !closed_at.nil? && closed_at > old_check
+    puts "Closed #{item[:title]} at #{closed_at}"
+
+    embed[:color] = hex_to_int('#eb4034')
+    embed[:title] = "Pull request closed: ##{item[:number]} #{item[:title]}"
 
     send_embed(embed)
   end
