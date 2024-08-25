@@ -19,5 +19,5 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec rake run
         env:
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_URLS: ${{ secrets.WEBHOOK_URLS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
