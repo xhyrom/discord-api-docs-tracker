@@ -20,4 +20,5 @@ jobs:
       - run: bundle exec rake run
         env:
           WEBHOOK_URLS: ${{ secrets.WEBHOOK_URLS }}
+          CONTENTS: ${{ secrets.CONTENTS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
