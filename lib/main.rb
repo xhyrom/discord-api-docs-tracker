@@ -15,11 +15,11 @@ old_check = issue[:body].to_i
 response = HTTParty.get('https://api.github.com/repos/discord/discord-api-docs/pulls?state=all', format: :plain)
 data = JSON.parse response, symbolize_names: true
 
-def send_embed(embed)
+def send_embed(embed, type)
   contents = ENV['CONTENTS'].split(',')
 
   ENV['WEBHOOK_URLS'].split(',').each_with_index do |url, i|
-    content = contents[i]
+    content = type == :merged ? contents[i] : nil
 
     HTTParty.post(
       "https://discord.com/api/webhooks/#{url}",
@@ -65,7 +65,7 @@ data.each do |item|
     embed[:color] = hex_to_int('#4adb40')
     embed[:title] = "Pull request opened: ##{item[:number]} #{item[:title]}"
 
-    send_embed(embed)
+    send_embed(embed, :created)
   end
 
   if merged_at.nil? && !closed_at.nil? && closed_at > old_check
@@ -74,7 +74,7 @@ data.each do |item|
     embed[:color] = hex_to_int('#eb4034')
     embed[:title] = "Pull request closed: ##{item[:number]} #{item[:title]}"
 
-    send_embed(embed)
+    send_embed(embed, :closed)
   end
 
   next unless !merged_at.nil? && merged_at > old_check
@@ -84,7 +84,7 @@ data.each do |item|
   embed[:color] = hex_to_int('#983ac7')
   embed[:title] = "Pull request merged: ##{item[:number]} #{item[:title]}"
 
-  send_embed(embed)
+  send_embed(embed, :merged)
 end
 
 HTTParty.patch(
